@@ -3,36 +3,39 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Member Portal</title>
+  <title>CSS Member Pass</title>
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0f172a">
+  <meta name="theme-color" content="#2a2520">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1pO45bVgBe2SdMzZrEsYJ9vCoo-U3nXt5">
   <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1pO45bVgBe2SdMzZrEsYJ9vCoo-U3nXt5">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=Source+Serif+4:ital,wght@0,400;0,600;0,700;1,600;1,700&display=swap" rel="stylesheet">
   <style>
     :root {
-      --primary: #27ae60;
-      --bg: #f1f5f9;
-      --slate-600: #475569;
-      --slate-800: #1e293b;
+      --primary: #4c6b47;   /* active / sage */
+      --pending: #a1502f;   /* pending / clay */
+      --ink: #2a2520;
+      --ink-soft: #6b6153;
+      --paper: #f3ecda;
+      --paper-deep: #e7ddc0;
+      --gold: #a8822e;
+      --gold-deep: #7c611f;
+      --error: #8c3b2e;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
     body {
       margin: 0;
       padding: 0;
       min-height: 100vh;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-      background-color: var(--bg);
+      font-family: 'Source Serif 4', Georgia, serif;
+      background-color: #efe8d6;
+      background-image: radial-gradient(rgba(168, 130, 46, 0.35) 1.4px, transparent 1.4px);
+      background-size: 22px 22px;
       display: flex;
       justify-content: center;
       align-items: flex-start;
-      background-image: radial-gradient(#cbd5e1 1.5px, transparent 1.5px);
-      background-size: 24px 24px;
-      color: #1e293b;
+      color: var(--ink);
       -webkit-font-smoothing: antialiased;
       -webkit-tap-highlight-color: transparent;
     }
@@ -48,11 +51,12 @@
       width: 100%;
       max-width: 380px;
       height: auto;
-      border-radius: 16px;
-      margin-bottom: 30px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+      border-radius: 6px;
+      margin-bottom: 34px;
+      box-shadow: 0 10px 26px rgba(60, 45, 10, 0.25);
       object-fit: cover;
       display: block;
+      filter: sepia(0.12) contrast(1.03);
     }
     .card-wrapper {
       position: relative;
@@ -60,57 +64,82 @@
       z-index: 10;
       animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
+
+    /* --- Ticket card: sawtooth perforated edges via clip-path --- */
     .card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
+      --tooth: 8px;
+      background: var(--paper);
       width: 100%;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-      padding: 35px 25px;
+      padding: 44px 26px 32px;
       text-align: center;
-      border-top: 8px solid var(--primary);
+      border-top: 10px solid var(--primary);
       position: relative;
       transition: border-color 0.4s ease;
+      filter: drop-shadow(0 18px 32px rgba(50, 38, 12, 0.28));
+      clip-path: polygon(
+        0 var(--tooth), 5% 0, 10% var(--tooth), 15% 0, 20% var(--tooth), 25% 0, 30% var(--tooth), 35% 0,
+        40% var(--tooth), 45% 0, 50% var(--tooth), 55% 0, 60% var(--tooth), 65% 0, 70% var(--tooth), 75% 0,
+        80% var(--tooth), 85% 0, 90% var(--tooth), 95% 0, 100% var(--tooth),
+        100% calc(100% - var(--tooth)), 95% 100%, 90% calc(100% - var(--tooth)), 85% 100%,
+        80% calc(100% - var(--tooth)), 75% 100%, 70% calc(100% - var(--tooth)), 65% 100%,
+        60% calc(100% - var(--tooth)), 55% 100%, 50% calc(100% - var(--tooth)), 45% 100%,
+        40% calc(100% - var(--tooth)), 35% 100%, 30% calc(100% - var(--tooth)), 25% 100%,
+        20% calc(100% - var(--tooth)), 15% 100%, 10% calc(100% - var(--tooth)), 5% 100%, 0 calc(100% - var(--tooth))
+      );
+    }
+    .cloud-motif {
+      position: absolute;
+      top: 6px;
+      right: 2px;
+      width: 84px;
+      height: auto;
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: 0;
     }
     .panda {
       position: absolute;
       width: 90px;
       z-index: 2;
       pointer-events: none;
-      filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
+      filter: sepia(0.25) drop-shadow(0 4px 6px rgba(50, 38, 12, 0.2));
     }
-    .top-panda {
-      top: -50px;
-      right: 15px;
-    }
-    .bottom-panda {
-      bottom: -47px;
-      left: 10px;
-      transform: scaleY(-1);
-    }
+    .top-panda { top: -46px; right: 15px; }
+    .bottom-panda { bottom: -43px; left: 10px; transform: scaleY(-1); }
+
     h2 {
-      font-family: 'Outfit', sans-serif;
+      font-family: 'Silkscreen', monospace;
       margin: 0;
-      color: #1e293b;
-      font-size: 28px;
-      font-weight: 800;
-      line-height: 1.2;
+      color: var(--ink);
+      font-size: 22px;
+      font-weight: 700;
+      line-height: 1.5;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 1;
     }
     p {
-      color: #64748b;
+      color: var(--ink-soft);
       margin: 10px 0 20px;
-      font-size: 15px;
+      font-size: 16px;
+      line-height: 1.55;
+    }
+    .perforation {
+      border: none;
+      border-top: 2px dashed var(--gold);
+      opacity: 0.55;
+      margin: 26px 0;
     }
     .btn {
-      background: #0f172a;
-      color: white;
+      background: var(--ink);
+      color: var(--paper);
       border: none;
       padding: 16px;
-      border-radius: 12px;
-      font-family: 'Outfit', sans-serif;
-      font-size: 18px;
-      font-weight: 600;
+      border-radius: 4px;
+      font-family: 'Silkscreen', monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
       cursor: pointer;
       width: 100%;
       transition: 0.2s;
@@ -118,76 +147,70 @@
       text-decoration: none;
     }
     .btn:hover {
-      background: #1e293b;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      background: #1a1712;
+      box-shadow: 0 4px 12px rgba(50, 38, 12, 0.25);
     }
-    .btn:active {
-      transform: scale(0.97);
-    }
+    .btn:active { transform: scale(0.97); }
     .btn:disabled {
-      background: #94a3b8;
+      background: #a79a80;
       cursor: not-allowed;
     }
-    .hidden {
-      display: none !important;
-    }
+    .hidden { display: none !important; }
     select {
       width: 100%;
       padding: 16px 45px 16px 16px;
       margin-bottom: 16px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Source Serif 4', serif;
       font-size: 16px;
       font-weight: 600;
-      border: 2px solid #cbd5e1;
-      border-radius: 12px;
-      background-color: #f8fafc;
-      color: #0f172a;
+      border: 2px dashed var(--gold);
+      border-radius: 6px;
+      background-color: var(--paper-deep);
+      color: var(--ink);
       appearance: none;
       cursor: pointer;
       outline: none;
       transition: all 0.2s;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23475569'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%237c611f'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
       background-repeat: no-repeat;
       background-position: right 16px center;
       background-size: 18px;
     }
     select:focus {
-      border-color: #0f172a;
-      background-color: #ffffff;
-      box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+      border-color: var(--ink);
+      background-color: #fbf7ea;
+      box-shadow: 0 0 0 4px rgba(42, 37, 32, 0.1);
     }
     .deal-badge {
-      background: #f8fafc;
-      border: 2px dashed #cbd5e1;
+      background: var(--paper-deep);
+      border: 2px dashed var(--gold);
       padding: 20px;
-      border-radius: 12px;
+      border-radius: 6px;
       margin: 20px 0;
       text-align: center;
     }
     .badge-member {
       font-size: 14px;
-      color: #64748b;
-      font-weight: 500;
+      color: var(--ink-soft);
+      font-weight: 600;
       margin-bottom: 12px;
       padding-bottom: 12px;
-      border-bottom: 1px dashed #cbd5e1;
+      border-bottom: 1px dashed var(--gold);
     }
-    .badge-member strong {
-      color: #0f172a;
+    .badge-member strong { color: var(--ink); font-weight: 700; }
+    .loc-name {
+      color: var(--ink);
+      font-family: 'Silkscreen', monospace;
+      font-size: 19px;
       font-weight: 700;
     }
-    .loc-name {
-      color: #0f172a;
-      font-family: 'Outfit', sans-serif;
-      font-size: 22px;
-      font-weight: 800;
-    }
     .deal-text {
-      color: #27ae60;
-      font-family: 'Inter', sans-serif;
-      font-size: 15px;
-      font-weight: 600;
-      margin-top: 4px;
+      color: var(--primary);
+      font-family: 'Source Serif 4', serif;
+      font-style: italic;
+      font-size: 16px;
+      font-weight: 700;
+      margin-top: 6px;
     }
     .back-link {
       display: inline-flex;
@@ -195,41 +218,37 @@
       justify-content: center;
       gap: 6px;
       margin-top: 15px;
-      color: #475569;
-      background: #f1f5f9;
-      border: 1px solid #cbd5e1;
+      color: var(--ink-soft);
+      background: var(--paper-deep);
+      border: 1px dashed var(--gold);
       text-decoration: none;
-      font-size: 13px;
-      font-weight: 600;
+      font-family: 'Silkscreen', monospace;
+      font-size: 11px;
       cursor: pointer;
-      padding: 8px 16px;
-      border-radius: 8px;
+      padding: 9px 16px;
+      border-radius: 5px;
       transition: all 0.2s ease;
     }
     .back-link:hover {
-      background: #e2e8f0;
-      color: #0f172a;
-      border-color: #94a3b8;
+      background: #ddd0ab;
+      color: var(--ink);
+      border-color: var(--gold-deep);
     }
     .website-footer {
       margin-top: 40px;
       font-size: 14px;
-      color: #64748b;
+      color: var(--ink-soft);
       font-weight: 500;
     }
     .website-footer a {
-      color: #0f172a;
+      color: var(--ink);
       text-decoration: none;
       font-weight: 700;
       border-bottom: 2px solid transparent;
       transition: border-color 0.2s;
     }
-    .website-footer a:hover {
-      border-bottom: 2px solid #0f172a;
-    }
-    .pulse {
-      animation: pulseAnim 1.5s infinite;
-    }
+    .website-footer a:hover { border-bottom: 2px solid var(--gold); }
+    .pulse { animation: pulseAnim 1.5s infinite; }
     @keyframes popIn {
       0% { opacity: 0; transform: translateY(20px) scale(0.95); }
       100% { opacity: 1; transform: translateY(0) scale(1); }
@@ -242,21 +261,45 @@
     .text-input {
       width: 100%;
       padding: 14px 16px;
-      font-family: 'Inter', sans-serif;
+      font-family: 'Source Serif 4', serif;
       font-size: 15px;
       font-weight: 600;
-      border: 2px solid #cbd5e1;
-      border-radius: 12px;
-      background-color: #f8fafc;
-      color: #0f172a;
+      border: 2px dashed var(--gold);
+      border-radius: 6px;
+      background-color: var(--paper-deep);
+      color: var(--ink);
       outline: none;
       transition: all 0.2s;
       text-align: center;
     }
     .text-input:focus {
-      border-color: #0f172a;
-      background-color: #ffffff;
-      box-shadow: 0 0 0 4px rgba(15, 23, 42, 0.08);
+      border-color: var(--ink);
+      background-color: #fbf7ea;
+      box-shadow: 0 0 0 4px rgba(42, 37, 32, 0.1);
+    }
+    .ticket-pill {
+      font-family: 'Silkscreen', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--ink-soft);
+      background: var(--paper-deep);
+      border: 1px dashed var(--gold);
+      padding: 5px 12px;
+      border-radius: 5px;
+      letter-spacing: 0.5px;
+    }
+    .stamp {
+      display: inline-block;
+      font-family: 'Silkscreen', monospace;
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--primary);
+      border: 3px solid var(--primary);
+      border-radius: 8px;
+      padding: 8px 18px;
+      transform: rotate(-4deg);
+      margin: 4px 0 6px;
     }
   </style>
 </head>
@@ -270,10 +313,19 @@
       <img src="https://lh3.googleusercontent.com/d/1pO45bVgBe2SdMzZrEsYJ9vCoo-U3nXt5" class="panda top-panda" alt="CSS Panda">
 
       <div class="card" id="main-card">
+        <!-- Gold cloud motif -->
+        <svg class="cloud-motif" viewBox="0 0 100 60" xmlns="http://www.w3.org/2000/svg">
+          <g fill="#a8822e">
+            <ellipse cx="30" cy="34" rx="22" ry="16" opacity="0.55"/>
+            <ellipse cx="55" cy="24" rx="26" ry="19" opacity="0.55"/>
+            <ellipse cx="75" cy="38" rx="18" ry="13" opacity="0.55"/>
+          </g>
+        </svg>
+
         <!-- 1. LOADING VIEW -->
         <div id="view-loading">
-          <div class="pulse" style="padding: 40px 0; color: #64748b; font-weight: 600; font-size: 16px;">
-            Loading Member Portal...
+          <div class="pulse" style="padding: 40px 0; color: var(--ink-soft); font-family: 'Silkscreen', monospace; font-size: 13px;">
+            LOADING MEMBER PASS...
           </div>
         </div>
 
@@ -282,19 +334,21 @@
           <div id="status-card-view">
             <h2>
               <span id="status-title">Account Active</span><br>
-              <span id="status-subtext" style="font-size: 16px; font-weight: 500; color: #64748b;">Welcome, Member!</span>
+              <span id="status-subtext" style="font-family: 'Source Serif 4', serif; font-style: italic; font-size: 16px; font-weight: 600; color: var(--ink-soft);">Welcome, Member!</span>
             </h2>
 
             <!-- Digital QR Code -->
-            <div id="qr-container" style="margin: 20px auto 14px; background: white; padding: 12px; border-radius: 14px; display: inline-block; box-shadow: 0 4px 14px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;">
-              <img id="member-qr" src="" alt="Membership QR" style="width: 155px; height: 155px; display: block; border-radius: 8px;">
+            <div id="qr-container" style="margin: 20px auto 14px; background: #fbf7ea; padding: 12px; border-radius: 8px; display: inline-block; box-shadow: 0 4px 14px rgba(50,38,12,0.1); border: 2px dashed var(--gold);">
+              <img id="member-qr" src="" alt="Membership QR" style="width: 155px; height: 155px; display: block; border-radius: 4px;">
             </div>
 
             <!-- Member Meta Tags -->
             <div style="display: flex; justify-content: center; gap: 8px; margin-bottom: 20px; flex-wrap: wrap;">
-              <span id="pill-member-id" style="font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 700; color: #475569; background: #f1f5f9; padding: 4px 12px; border-radius: 6px; letter-spacing: 0.5px;">CSS-MEMBER</span>
-              <span id="pill-ucid" style="display: none; font-family: 'Outfit', sans-serif; font-size: 13px; font-weight: 600; color: #64748b; background: #f1f5f9; padding: 4px 10px; border-radius: 6px;"></span>
+              <span id="pill-member-id" class="ticket-pill">CSS-MEMBER</span>
+              <span id="pill-ucid" class="ticket-pill" style="display: none;"></span>
             </div>
+
+            <hr class="perforation">
 
             <!-- Access Deals Button -->
             <div id="deals-btn-container">
@@ -303,7 +357,7 @@
 
             <!-- Lookup Switch Link -->
             <div style="margin-top: 16px;">
-              <a style="font-size: 12px; color: #94a3b8; text-decoration: none; cursor: pointer;" onclick="showLookupView()" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
+              <a style="font-size: 12px; font-style: italic; color: var(--ink-soft); text-decoration: none; cursor: pointer;" onclick="showLookupView()" onmouseover="this.style.textDecoration='underline'" onmouseout="this.style.textDecoration='none'">
                 Look up another UCID or Member ID
               </a>
             </div>
@@ -315,8 +369,8 @@
           <!-- Step 1: Selection -->
           <div id="deal-step-1">
             <h2 class="title">Member Perks & Deals</h2>
-            <p class="subtitle" style="margin: 4px 0 16px; font-weight: 600; color: #64748b;">
-              Member: <strong id="deals-member-name" style="color: #0f172a;">Member</strong>
+            <p class="subtitle" style="margin: 4px 0 16px; font-weight: 600; font-style: italic; color: var(--ink-soft);">
+              Member: <strong id="deals-member-name" style="color: var(--ink); font-style: normal;">Member</strong>
             </p>
 
             <select id="biz" onchange="onSponsorSelected()">
@@ -324,9 +378,9 @@
             </select>
 
             <!-- Deal Details Preview -->
-            <div id="deal-preview" style="display: none; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 12px 16px; margin-bottom: 18px; text-align: center;">
-              <div style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 800; color: #94a3b8; margin-bottom: 4px;">Exclusive Perk</div>
-              <div id="deal-preview-text" style="font-size: 15px; font-weight: 700; color: #27ae60;"></div>
+            <div id="deal-preview" style="display: none; background: var(--paper-deep); border: 1px dashed var(--gold); border-radius: 6px; padding: 12px 16px; margin-bottom: 18px; text-align: center;">
+              <div style="font-family: 'Silkscreen', monospace; font-size: 10px; letter-spacing: 0.5px; font-weight: 700; color: var(--gold-deep); margin-bottom: 6px;">Exclusive Perk</div>
+              <div id="deal-preview-text" style="font-family: 'Source Serif 4', serif; font-style: italic; font-size: 16px; font-weight: 700; color: var(--primary);"></div>
             </div>
 
             <button class="btn" id="redeem-btn" onclick="redeem()">Redeem Discount</button>
@@ -340,12 +394,12 @@
 
           <!-- Step 2: Approved Cashier Screen -->
           <div id="deal-step-2" class="hidden">
-            <h2 class="title" style="color: #27ae60; font-size: 32px; letter-spacing: 0.5px;">✓ APPROVED</h2>
-            <p class="subtitle" id="display-time" style="font-family: 'Outfit', sans-serif; font-size: 15px; font-weight: 700; color: #1e293b; margin: 6px 0 10px;"></p>
+            <div class="stamp">✓ APPROVED</div>
+            <p class="subtitle" id="display-time" style="font-family: 'Silkscreen', monospace; font-size: 13px; font-weight: 700; color: var(--ink); margin: 10px 0 12px;"></p>
 
             <!-- Live Verification Pill -->
-            <div style="display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 700; color: #10b981; background: #ecfdf5; border: 1px solid #a7f3d0; padding: 4px 12px; border-radius: 999px; margin-bottom: 14px;">
-              <span style="width: 6px; height: 6px; border-radius: 50%; background: #10b981; animation: pulseAnim 1.5s infinite;"></span>
+            <div style="display: inline-flex; align-items: center; gap: 6px; font-family: 'Silkscreen', monospace; font-size: 10px; font-weight: 700; color: #3f6b3a; background: #e9efe3; border: 1px dashed #a7c298; padding: 5px 12px; border-radius: 999px; margin-bottom: 16px;">
+              <span style="width: 6px; height: 6px; border-radius: 50%; background: #3f6b3a; animation: pulseAnim 1.5s infinite;"></span>
               Live Verified Pass
             </div>
 
@@ -367,14 +421,14 @@
         <!-- 4. LOOKUP VIEW (When no ID is provided) -->
         <div id="view-lookup" class="hidden">
           <h2>Member Portal</h2>
-          <p style="margin: 8px 0 20px; font-size: 14px; color: #64748b;">
+          <p style="margin: 8px 0 20px; font-size: 15px; font-style: italic; color: var(--ink-soft);">
             Enter your UCID or Member ID to view your digital pass and unlock sponsor perks.
           </p>
 
           <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
             <input type="text" id="lookup-input" class="text-input" placeholder="UCID or Member ID (e.g. 30123456)" onkeydown="if(event.key==='Enter') lookupMember()">
             <button class="btn" id="lookup-btn" onclick="lookupMember()">Access Member Pass</button>
-            <div id="lookup-error" style="display: none; color: #ef4444; font-size: 13px; font-weight: 600;"></div>
+            <div id="lookup-error" style="display: none; color: var(--error); font-size: 13px; font-weight: 600;"></div>
           </div>
         </div>
       </div>
@@ -414,21 +468,21 @@
       if (viewName === 'status') {
         document.getElementById('view-status').classList.remove('hidden');
         if (currentMember) {
-          setBorderColor(currentMember.valid ? '#27ae60' : '#e67e22');
+          setBorderColor(currentMember.valid ? '#4c6b47' : '#a1502f');
         }
       } else if (viewName === 'deals') {
         document.getElementById('view-deals').classList.remove('hidden');
         document.getElementById('deal-step-1').classList.remove('hidden');
         document.getElementById('deal-step-2').classList.add('hidden');
-        setBorderColor('#27ae60');
+        setBorderColor('#4c6b47');
       } else if (viewName === 'approved') {
         document.getElementById('view-deals').classList.remove('hidden');
         document.getElementById('deal-step-1').classList.add('hidden');
         document.getElementById('deal-step-2').classList.remove('hidden');
-        setBorderColor('#27ae60');
+        setBorderColor('#4c6b47');
       } else if (viewName === 'lookup') {
         document.getElementById('view-lookup').classList.remove('hidden');
-        setBorderColor('#0f172a');
+        setBorderColor('#2a2520');
         document.getElementById('lookup-input').focus();
       }
     }
@@ -487,15 +541,15 @@
 
       if (member.valid) {
         titleEl.innerText = "Account Active";
-        titleEl.style.color = "#27ae60";
+        titleEl.style.color = "#4c6b47";
         subtextEl.innerText = `Welcome, ${member.name}!`;
-        setBorderColor("#27ae60");
+        setBorderColor("#4c6b47");
         dealsBtn.style.display = "inline-block";
       } else {
         titleEl.innerText = "Payment Pending";
-        titleEl.style.color = "#e67e22";
-        subtextEl.innerHTML = `Welcome, ${member.name}!<br><span style="font-size:13px;color:#e67e22;">Please confirm your payment with an admin to unlock deals.</span>`;
-        setBorderColor("#e67e22");
+        titleEl.style.color = "#a1502f";
+        subtextEl.innerHTML = `Welcome, ${member.name}!<br><span style="font-size:13px;color:#a1502f;">Please confirm your payment with an admin to unlock deals.</span>`;
+        setBorderColor("#a1502f");
         dealsBtn.style.display = "none";
       }
 
