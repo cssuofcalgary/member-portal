@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>🐼 CSS Member Portal</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#090d16">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: #090d16;
+      color: #f8fafc;
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 16px 40px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Top Bar */
+    .top-bar {
+      width: 100%;
+      max-width: 440px;
+      padding: 14px 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 15px;
+      color: #ffffff;
+      text-decoration: none;
+    }
+    .portal-badge {
+      font-size: 11px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #94a3b8;
+      padding: 3px 8px;
+      border-radius: 100px;
+      font-weight: 600;
+    }
+    .btn-icon {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #cbd5e1;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all 0.15s ease;
+    }
+    .btn-icon:active {
+      transform: scale(0.92);
+      background: rgba(51, 65, 85, 0.9);
+    }
+
+    /* Main Container */
+    .portal-container {
+      width: 100%;
+      max-width: 440px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    /* Digital Member Pass Card */
+    .pass-card {
+      background: linear-gradient(145deg, rgba(15, 23, 42, 0.98), rgba(10, 15, 30, 0.95));
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 24px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    .pass-card::before {
+      content: "";
+      position: absolute;
+      top: -60px; right: -60px;
+      width: 160px; height: 160px;
+      background: radial-gradient(circle, rgba(16, 185, 129, 0.15), transparent 70%);
+      pointer-events: none;
+    }
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+    }
+    .org-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 11px;
+      font-weight: 800;
+      letter-spacing: 1.2px;
+      color: #94a3b8;
+      text-transform: uppercase;
+    }
+    .card-label {
+      font-size: 16px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-top: 2px;
+      font-family: 'Outfit', sans-serif;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 100px;
+      font-size: 11px;
+      font-weight: 700;
+    }
+    .status-badge.active {
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.4);
+      color: #34d399;
+    }
+    .status-badge.pending {
+      background: rgba(245, 158, 11, 0.15);
+      border: 1px solid rgba(245, 158, 11, 0.4);
+      color: #fbbf24;
+    }
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: currentColor;
+    }
+
+    .member-info {
+      margin-bottom: 20px;
+    }
+    .member-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 26px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+    .member-meta {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+      font-size: 13px;
+      color: #94a3b8;
+      font-weight: 500;
+    }
+    .meta-chip {
+      background: rgba(255, 255, 255, 0.06);
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-weight: 600;
+      color: #cbd5e1;
+    }
+
+    /* QR Code Display */
+    .qr-box {
+      background: #ffffff;
+      padding: 12px;
+      border-radius: 14px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      margin: 10px 0 6px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+    .qr-img {
+      width: 140px;
+      height: 140px;
+      display: block;
+    }
+    .qr-note {
+      font-size: 11px;
+      color: #64748b;
+      margin-top: 6px;
+      text-align: center;
+    }
+
+    /* Perks / Deals Section */
+    .perks-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 20px;
+      padding: 22px;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.3);
+    }
+    .section-header {
+      margin-bottom: 16px;
+    }
+    .section-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .section-desc {
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 4px;
+    }
+
+    .deal-select-wrap {
+      position: relative;
+      margin-bottom: 14px;
+    }
+    select.deal-select {
+      width: 100%;
+      padding: 14px 16px;
+      background: #0b1120;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: #ffffff;
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+      appearance: none;
+      cursor: pointer;
+      transition: border-color 0.2s;
+    }
+    select.deal-select:focus {
+      border-color: #10b981;
+    }
+    .deal-select-wrap::after {
+      content: "▼";
+      font-size: 11px;
+      color: #94a3b8;
+      position: absolute;
+      right: 16px;
+      top: 50%;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .deal-detail-box {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px dashed rgba(16, 185, 129, 0.4);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .deal-biz-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+    .deal-perk-text {
+      font-size: 14px;
+      font-weight: 600;
+      color: #34d399;
+      line-height: 1.35;
+    }
+
+    .btn-redeem {
+      width: 100%;
+      padding: 14px;
+      background: #10b981;
+      border: none;
+      border-radius: 12px;
+      color: white;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+      transition: all 0.15s ease;
+    }
+    .btn-redeem:active {
+      transform: scale(0.97);
+      background: #059669;
+    }
+    .btn-redeem:disabled {
+      background: #334155;
+      color: #64748b;
+      box-shadow: none;
+      cursor: not-allowed;
+    }
+
+    /* Cashier Approved Screen */
+    .approved-card {
+      background: linear-gradient(145deg, rgba(6, 78, 59, 0.95), rgba(4, 47, 46, 0.98));
+      border: 2px solid #10b981;
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 20px 48px rgba(16, 185, 129, 0.25);
+      animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      display: none;
+    }
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.92); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+    .approved-icon {
+      font-size: 52px;
+      margin-bottom: 8px;
+    }
+    .approved-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: 1px;
+    }
+    .live-clock-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      padding: 6px 14px;
+      border-radius: 100px;
+      font-family: 'Outfit', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: #34d399;
+      margin: 12px 0 20px;
+    }
+    .live-pulse-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10b981;
+      box-shadow: 0 0 10px #10b981;
+      animation: blink 1s infinite alternate;
+    }
+    @keyframes blink {
+      0% { opacity: 0.4; }
+      100% { opacity: 1; }
+    }
+    .approved-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 16px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+    .approved-biz-title {
+      font-size: 12px;
+      color: #a7f3d0;
+      text-transform: uppercase;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+    }
+    .approved-biz-name {
+      font-family: 'Outfit', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      margin: 2px 0 6px;
+    }
+    .approved-deal-desc {
+      font-size: 15px;
+      font-weight: 600;
+      color: #6ee7b7;
+    }
+    .btn-back-deals {
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: white;
+      padding: 12px 20px;
+      border-radius: 100px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Lookup / Search View */
+    .lookup-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 20px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+      display: none;
+    }
+    .lookup-input {
+      width: 100%;
+      padding: 14px 16px;
+      background: #0b1120;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      color: #ffffff;
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+      margin: 16px 0;
+    }
+    .lookup-input:focus {
+      border-color: #10b981;
+    }
+
+    /* Loading Spinner */
+    .loading-wrap {
+      padding: 60px 0;
+      text-align: center;
+      color: #94a3b8;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .spinner {
+      width: 36px;
+      height: 36px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
+      border-top-color: #10b981;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    .footer-note {
+      font-size: 11px;
+      color: #64748b;
+      text-align: center;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Bar -->
+  <div class="top-bar">
+    <div class="brand">
+      <span>🐼</span>
+      <span>CSS</span>
+      <span class="portal-badge">Member Portal</span>
+    </div>
+    <button class="btn-icon" onclick="switchMember()" title="Switch Card">👤</button>
+  </div>
+
+  <div class="portal-container">
+
+    <!-- Loading State -->
+    <div class="loading-wrap" id="loading-view">
+      <div class="spinner"></div>
+      <div>Loading Member Portal...</div>
+    </div>
+
+    <!-- Lookup View (Shown if no member ID provided) -->
+    <div class="lookup-card" id="lookup-view">
+      <div style="font-size: 38px; margin-bottom: 8px;">🐼</div>
+      <h2 style="font-family:'Outfit',sans-serif; font-size: 22px;">Member Portal</h2>
+      <p style="font-size: 13px; color: #94a3b8; margin-top: 6px;">Enter your Member ID or UCID to load your pass.</p>
+      <input type="text" id="lookup-input" class="lookup-input" placeholder="e.g. CSS104 or 30123456" onkeydown="if(event.key==='Enter') doLookup()">
+      <div id="lookup-error" style="color: #ef4444; font-size: 12px; font-weight: 600; margin-bottom: 12px; display: none;"></div>
+      <button class="btn-redeem" onclick="doLookup()">Load Pass</button>
+    </div>
+
+    <!-- Active Digital Member Card -->
+    <div class="pass-card" id="card-view" style="display: none;">
+      <div class="card-top">
+        <div>
+          <div class="org-title">Computer Science Society</div>
+          <div class="card-label">Digital Member Pass</div>
+        </div>
+        <div class="status-badge active" id="badge-status">
+          <span class="status-dot"></span>
+          <span id="badge-status-text">Active Member</span>
+        </div>
+      </div>
+
+      <div class="member-info">
+        <div class="member-name" id="display-name">Member</div>
+        <div class="member-meta">
+          <span class="meta-chip" id="display-id">CSS...</span>
+          <span class="meta-chip" id="display-ucid">UCID: --</span>
+        </div>
+      </div>
+
+      <div style="text-align: center;">
+        <div class="qr-box">
+          <img class="qr-img" id="qr-img" alt="Member QR Code">
+        </div>
+        <div class="qr-note">Scan at doors for fast event check-in</div>
+      </div>
+    </div>
+
+    <!-- Perks & Discounts Section -->
+    <div class="perks-card" id="perks-view" style="display: none;">
+      <div class="section-header">
+        <div class="section-title">
+          <span>🛍️</span>
+          <span>Partner Perks & Deals</span>
+        </div>
+        <div class="section-desc">Show your screen to the cashier at checkout to redeem.</div>
+      </div>
+
+      <div class="deal-select-wrap">
+        <select class="deal-select" id="deal-select" onchange="onDealSelected()">
+          <option value="" disabled selected>Select a partner store...</option>
+        </select>
+      </div>
+
+      <div class="deal-detail-box" id="deal-detail-box">
+        <div class="deal-biz-name" id="deal-biz-name">Store Name</div>
+        <div class="deal-perk-text" id="deal-perk-text">Discount details here...</div>
+      </div>
+
+      <button class="btn-redeem" id="btn-redeem" disabled onclick="redeemDeal()">Redeem Discount</button>
+    </div>
+
+    <!-- Cashier Approved Screen -->
+    <div class="approved-card" id="approved-view">
+      <div class="approved-icon">✓</div>
+      <div class="approved-title">APPROVED</div>
+      <div class="live-clock-badge">
+        <span class="live-pulse-dot"></span>
+        <span id="live-clock">--:--:-- --</span>
+      </div>
+
+      <div class="approved-box">
+        <div class="approved-biz-title">Partner Location</div>
+        <div class="approved-biz-name" id="appr-biz">--</div>
+        <div class="approved-deal-desc" id="appr-deal">--</div>
+        <div style="font-size: 11px; color: #a7f3d0; margin-top: 8px; border-top: 1px dashed rgba(255,255,255,0.2); padding-top: 6px;">
+          Member: <strong id="appr-member" style="color:white;">--</strong>
+        </div>
+      </div>
+
+      <button class="btn-back-deals" onclick="closeApproved()">
+        <span>← Done / Another Deal</span>
+      </button>
+    </div>
+
+    <div class="footer-note" id="footer-cache-note" style="display: none;">
+      ● Pass saved offline
+    </div>
+
+  </div>
+
+  <script>
+    // Configured Google Apps Script Gateway
+    const API_URL = "https://script.google.com/macros/s/AKfycbzWhQZso81T_CH3j5V5srpFnA6nADnW7oe5SOKef0JcBED3ivoD0h0KVjErfvKok8RH/exec";
+
+    let currentMember = null;
+    let clockInterval = null;
+    let sponsorsList = [];
+
+    function initPortal() {
+      const urlParams = new URLSearchParams(window.location.search);
+      let queryId = urlParams.get("member") || urlParams.get("id") || urlParams.get("ucid") || urlParams.get("ticket");
+
+      if (queryId) {
+        queryId = queryId.trim().toUpperCase();
+        loadMemberData(queryId);
+      } else {
+        // Try localStorage cache
+        const cached = localStorage.getItem("CSS_SAVED_MEMBER");
+        if (cached) {
+          try {
+            currentMember = JSON.parse(cached);
+            renderPass(currentMember);
+            loadSponsors();
+            // Silent background refresh
+            fetch(API_URL + "?action=getMember&id=" + encodeURIComponent(currentMember.id))
+              .then(r => r.json())
+              .then(d => {
+                if (d.success) {
+                  currentMember = d;
+                  localStorage.setItem("CSS_SAVED_MEMBER", JSON.stringify(d));
+                  renderPass(d);
+                }
+              }).catch(() => {});
+            return;
+          } catch(e) {}
+        }
+        showLookup();
+      }
+    }
+
+    function showLookup() {
+      document.getElementById("loading-view").style.display = "none";
+      document.getElementById("card-view").style.display = "none";
+      document.getElementById("perks-view").style.display = "none";
+      document.getElementById("approved-view").style.display = "none";
+      document.getElementById("lookup-view").style.display = "block";
+      setTimeout(() => document.getElementById("lookup-input").focus(), 200);
+    }
+
+    function doLookup() {
+      const input = document.getElementById("lookup-input");
+      const err = document.getElementById("lookup-error");
+      const val = (input.value || "").trim().toUpperCase();
+      if (!val) {
+        err.innerText = "Please enter your Member ID or UCID.";
+        err.style.display = "block";
+        return;
+      }
+      err.style.display = "none";
+      document.getElementById("lookup-view").style.display = "none";
+      document.getElementById("loading-view").style.display = "block";
+      loadMemberData(val);
+    }
+
+    function loadMemberData(id) {
+      fetch(API_URL + "?action=getMember&id=" + encodeURIComponent(id))
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            currentMember = data;
+            localStorage.setItem("CSS_SAVED_MEMBER", JSON.stringify(data));
+            renderPass(data);
+            loadSponsors();
+          } else {
+            showLookup();
+            const err = document.getElementById("lookup-error");
+            err.innerText = data.message || "Member not found. Please verify your ID.";
+            err.style.display = "block";
+          }
+        })
+        .catch(err => {
+          // Check if cached
+          const cached = localStorage.getItem("CSS_SAVED_MEMBER");
+          if (cached) {
+            currentMember = JSON.parse(cached);
+            renderPass(currentMember);
+            loadSponsors();
+            document.getElementById("footer-cache-note").style.display = "block";
+          } else {
+            showLookup();
+            const eEl = document.getElementById("lookup-error");
+            eEl.innerText = "Connection error. Please try again.";
+            eEl.style.display = "block";
+          }
+        });
+    }
+
+    function renderPass(m) {
+      document.getElementById("loading-view").style.display = "none";
+      document.getElementById("lookup-view").style.display = "none";
+      document.getElementById("approved-view").style.display = "none";
+      document.getElementById("card-view").style.display = "block";
+      document.getElementById("perks-view").style.display = "block";
+
+      document.getElementById("display-name").innerText = m.name || "Member";
+      document.getElementById("display-id").innerText = m.id || "CSS";
+      document.getElementById("display-ucid").innerText = m.ucid ? `UCID: ${m.ucid}` : "UCID: Registered";
+
+      const badge = document.getElementById("badge-status");
+      const badgeText = document.getElementById("badge-status-text");
+      if (m.valid) {
+        badge.className = "status-badge active";
+        badgeText.innerText = "Active Member";
+      } else {
+        badge.className = "status-badge pending";
+        badgeText.innerText = "Payment Pending";
+      }
+
+      // Generate scannable QR Code
+      const qrData = encodeURIComponent(m.id || m.ucid);
+      document.getElementById("qr-img").src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${qrData}&margin=2`;
+    }
+
+    function loadSponsors() {
+      // Check cache first
+      const cached = localStorage.getItem("CSS_SAVED_SPONSORS");
+      if (cached) {
+        try {
+          sponsorsList = JSON.parse(cached);
+          populateSponsors(sponsorsList);
+        } catch(e) {}
+      }
+
+      fetch(API_URL + "?action=getSponsors")
+        .then(res => res.json())
+        .then(data => {
+          if (data.success && data.sponsors && data.sponsors.length > 0) {
+            sponsorsList = data.sponsors;
+            localStorage.setItem("CSS_SAVED_SPONSORS", JSON.stringify(sponsorsList));
+            populateSponsors(sponsorsList);
+          }
+        })
+        .catch(() => {});
+    }
+
+    function populateSponsors(list) {
+      const sel = document.getElementById("deal-select");
+      sel.innerHTML = '<option value="" disabled selected>Select a partner store...</option>';
+      list.forEach(s => {
+        const opt = document.createElement("option");
+        opt.value = s.name;
+        opt.setAttribute("data-deal", s.deal);
+        opt.innerText = s.name;
+        sel.appendChild(opt);
+      });
+    }
+
+    function onDealSelected() {
+      const sel = document.getElementById("deal-select");
+      const opt = sel.options[sel.selectedIndex];
+      const dealText = opt.getAttribute("data-deal");
+      const bizName = opt.value;
+
+      document.getElementById("deal-biz-name").innerText = bizName;
+      document.getElementById("deal-perk-text").innerText = dealText;
+      document.getElementById("deal-detail-box").style.display = "block";
+      document.getElementById("btn-redeem").disabled = false;
+    }
+
+    function redeemDeal() {
+      const sel = document.getElementById("deal-select");
+      const opt = sel.options[sel.selectedIndex];
+      if (!opt || !opt.value) return;
+
+      const bizName = opt.value;
+      const dealText = opt.getAttribute("data-deal");
+      const memberName = currentMember ? currentMember.name : "Member";
+      const memberId = currentMember ? currentMember.id : "";
+
+      // Silent analytics ping
+      fetch(`${API_URL}?action=logVisit&id=${encodeURIComponent(memberId)}&name=${encodeURIComponent(memberName)}&biz=${encodeURIComponent(bizName)}`, { mode: "no-cors" }).catch(() => {});
+
+      // Show Approved Cashier Screen
+      document.getElementById("card-view").style.display = "none";
+      document.getElementById("perks-view").style.display = "none";
+      document.getElementById("approved-view").style.display = "block";
+
+      document.getElementById("appr-biz").innerText = bizName;
+      document.getElementById("appr-deal").innerText = dealText;
+      document.getElementById("appr-member").innerText = `${memberName} (${memberId})`;
+
+      startLiveClock();
+    }
+
+    function startLiveClock() {
+      const clockEl = document.getElementById("live-clock");
+      function tick() {
+        const now = new Date();
+        clockEl.innerText = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+      }
+      tick();
+      clearInterval(clockInterval);
+      clockInterval = setInterval(tick, 1000);
+    }
+
+    function closeApproved() {
+      clearInterval(clockInterval);
+      document.getElementById("approved-view").style.display = "none";
+      document.getElementById("card-view").style.display = "block";
+      document.getElementById("perks-view").style.display = "block";
+    }
+
+    function switchMember() {
+      localStorage.removeItem("CSS_SAVED_MEMBER");
+      showLookup();
+    }
+
+    initPortal();
+  </script>
+</body>
+</html>
