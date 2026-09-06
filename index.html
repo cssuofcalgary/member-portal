@@ -67,7 +67,6 @@
       animation: popIn 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
     }
 
-    /* --- Ticket card: sawtooth perforated edges via clip-path --- */
     .card {
       --tooth: 8px;
       background: var(--paper);
@@ -111,7 +110,6 @@
       bottom: -43px;
       left: 10px;
       transform: scaleY(-1);
-      /* Explicit filter prevents dark mode from stacking an invert on top */
       filter: sepia(0.25) drop-shadow(0 4px 6px rgba(50, 38, 12, 0.2)) invert(0);
     }
     @media (prefers-color-scheme: dark) {
@@ -455,7 +453,6 @@
   </div>
 
   <script>
-    // Configuration
     const API_URL = "https://script.google.com/macros/s/AKfycbzWhQZso81T_CH3j5V5srpFnA6nADnW7oe5SOKef0JcBED3ivoD0h0KVjErfvKok8RH/exec";
     const STORAGE_KEY_MEMBER = "CSS_SAVED_MEMBER";
     const STORAGE_KEY_SPONSORS = "CSS_SAVED_SPONSORS";
@@ -464,7 +461,6 @@
     let sponsorsList = [];
     let liveClockInterval = null;
 
-    // View Management
     function setBorderColor(color) {
       document.getElementById('main-card').style.borderTopColor = color;
       document.documentElement.style.setProperty('--primary', color);
@@ -517,7 +513,6 @@
       switchView('lookup');
     }
 
-    // Live Clock for Anti-Screenshot Fraud Prevention
     function startLiveClock() {
       stopLiveClock();
       function updateClock() {
@@ -538,11 +533,9 @@
       }
     }
 
-    // Populate Status Pass View
     function renderMemberPass(member) {
       currentMember = member;
 
-      // Status title & subtext
       const titleEl = document.getElementById('status-title');
       const subtextEl = document.getElementById('status-subtext');
       const dealsBtn = document.getElementById('btn-show-deals');
@@ -564,10 +557,8 @@
         dealsBtn.style.display = "none";
       }
 
-      // Member ID Pill
       idEl.innerText = member.id || "MEMBER";
 
-      // UCID Pill (if exists)
       if (member.ucid) {
         ucidEl.innerText = `UCID: ${member.ucid}`;
         ucidEl.style.display = "inline-block";
@@ -575,15 +566,12 @@
         ucidEl.style.display = "none";
       }
 
-      // QR Code
       const qrData = member.id || member.ucid || "CSS-MEMBER";
       qrEl.src = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=4&data=${encodeURIComponent(qrData)}`;
 
-      // Deals names
       document.getElementById('deals-member-name').innerText = member.name;
       document.getElementById('approved-member-name').innerText = member.name;
 
-      // Check URL view mode
       const params = new URLSearchParams(window.location.search);
       const requestedView = (params.get('view') || '').toLowerCase();
       if (requestedView === 'deals' || requestedView === 'sponsor') {
@@ -593,7 +581,6 @@
       }
     }
 
-    // Populate Sponsors Dropdown
     function renderSponsorsDropdown(sponsors) {
       sponsorsList = sponsors || [];
       const select = document.getElementById('biz');
@@ -624,7 +611,6 @@
       preview.style.display = "block";
     }
 
-    // Redeem Deal Action
     function redeem() {
       const select = document.getElementById('biz');
       const btn = document.getElementById('redeem-btn');
@@ -640,13 +626,11 @@
       const bizName = select.value;
       const dealText = opt.getAttribute('data-deal') || 'Exclusive Member Discount';
 
-      // Update approved screen
       document.getElementById('display-biz').innerText = bizName;
       document.getElementById('display-deal').innerText = dealText;
       startLiveClock();
       switchView('approved');
 
-      // Silently log redemption visit to backend
       const memberId = currentMember ? (currentMember.id || currentMember.ucid || '') : '';
       const memberName = currentMember ? currentMember.name : '';
       const logUrl = `${API_URL}?action=logVisit&id=${encodeURIComponent(memberId)}&name=${encodeURIComponent(memberName)}&biz=${encodeURIComponent(bizName)}`;
@@ -655,7 +639,6 @@
         console.warn("Redemption log error (offline):", err);
       });
 
-      // Reset button
       setTimeout(() => {
         btn.innerText = "Redeem Discount";
         btn.disabled = false;
@@ -667,7 +650,6 @@
       switchView('deals');
     }
 
-    // Lookup Member manually
     async function lookupMember() {
       const input = document.getElementById('lookup-input');
       const btn = document.getElementById('lookup-btn');
@@ -706,9 +688,7 @@
       }
     }
 
-    // Initial Load & Sync Engine
     async function initPortal() {
-      // 1. Fetch Sponsors (offline cache first)
       const cachedSponsors = localStorage.getItem(STORAGE_KEY_SPONSORS);
       if (cachedSponsors) {
         try {
@@ -726,7 +706,6 @@
         })
         .catch(err => console.warn("Sponsors fetch offline, using cache"));
 
-      // 2. Identify Member ID from URL or Storage
       const params = new URLSearchParams(window.location.search);
       const queryId = (params.get('member') || params.get('id') || params.get('ucid') || '').trim();
       const memberIdToLoad = queryId || localStorage.getItem(STORAGE_KEY_MEMBER);
@@ -736,7 +715,6 @@
         return;
       }
 
-      // Check member offline cache for instant display
       const cacheKey = `CSS_CACHE_${memberIdToLoad.toUpperCase()}`;
       const cachedMember = localStorage.getItem(cacheKey);
       if (cachedMember) {
@@ -745,7 +723,6 @@
         } catch (e) {}
       }
 
-      // Live verification from API
       try {
         const res = await fetch(`${API_URL}?action=getMember&id=${encodeURIComponent(memberIdToLoad)}`);
         const data = await res.json();
@@ -763,7 +740,6 @@
           }
         }
       } catch (err) {
-        // If offline and we had cache, we're already rendering cache!
         if (!cachedMember) {
           showLookupView();
           const errEl = document.getElementById('lookup-error');
@@ -773,7 +749,6 @@
       }
     }
 
-    // Launch on load
     window.addEventListener('DOMContentLoaded', initPortal);
   </script>
 </body>
