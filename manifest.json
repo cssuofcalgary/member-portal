@@ -1,0 +1,21 @@
+{
+  "name": "CSS Member Portal",
+  "short_name": "Member Portal",
+  "description": "Official University of Calgary Computer Science Society Digital Member Portal & Perks Pass",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#090d16",
+  "theme_color": "#090d16",
+  "icons": [
+    {
+      "src": "https://lh3.googleusercontent.com/d/18PKJ8_u196NclUEILPRtc3eTK26bsZAI",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "https://lh3.googleusercontent.com/d/18PKJ8_u196NclUEILPRtc3eTK26bsZAI",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
